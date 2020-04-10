@@ -32,3 +32,5 @@ def build_array(tracks, fmt='motchallenge'):
                 track_array.append(row)
 
             id_ += 1
+        return track_array    
+        
