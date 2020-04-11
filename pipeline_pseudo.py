@@ -1,5 +1,8 @@
 import argparse
-
+import sys
+#import detector stuff
+sys.path.insert(1, '/darknet')
+import darknet
 #imports for tracker
 from iou_tracker import track_iou
 from util import load_mot
@@ -36,10 +39,8 @@ def track(args):
   tracks = build_array(tracks, fmt=args.format)
   return tracks
 
-def detection(args):
-  detects = darknet(frames)
-  detects = detects_csv()
-  return detects
+def detection(args,image):
+  '''runs a darknet detection.  Returns an array of form [(object, probability, (b.x, b.y, b.w, b.h)), (object2....]'''
 
 def ev_thresh(tracks,detects):
   tr = len(tracks)
