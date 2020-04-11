@@ -27,13 +27,20 @@ class tracker_args:
   ttl = 8
   nms = 0.6
   
-def input_data(data):
-  if(data == file):
-    #open video, store all image shots from video into an output directory
-    
-  elif(data == stream):
-    open_buffer()
-    return buffer_handle
+def input_data(vid_loc):
+  '''open video, store all frames to data/img_frames'''
+  path_output_dir = './data/img_frames'
+  video = cv2.VideoCapture(vid_loc)
+  count = 0
+  while(vidcap.isOpened():
+        flag, img = video.read()
+        if flag:
+          cv2.imwrite(os.path.join(path_output_dir, '%d.png') % count, img)
+          count += 1
+        else:
+          break
+  cv2.destroyAllWindows()
+  video.release()
 
 
 def track(args):
@@ -56,11 +63,12 @@ def ev_thresh(tracks,detections):
     FAR = FAR + .05
   return FAR
 
-def bootstrap():
-  
-
 def gui_feed():
   external_call(frames,detects)
 
 def main():
   args = tracker_args()
+  vid_loc = './data/video.mp4'
+  #create bootstrap detection
+  bootstrap = detection('./data/img_frames/1/png')
+  #enter loop where tracker is fed detections, detector fed tracks, and threshold evaluated as this changes
