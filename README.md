@@ -11,6 +11,7 @@ This work is indebted to existing Computer Vision models which we have repurpose
 ## Authors
 * **Caleb Carr** - Programmer and Research - [calebmcarr](https://github.com/calebmcarr)
 * **Bibi Dang** - Programmer and Research - [bibidang](https://github.com/bibidang)
+* **Dr. Justin Metcalf** - P.I - [Dr. Metcalf](http://www.ou.edu/coe/ece/faculty_directory/dr_metcalf)
 ## Paper
 Novel Track-before-Detect with Neural Networks
 ## License
