@@ -74,7 +74,7 @@ def main():
   frame_count = 0
   vid_loc = './data/video.mp4'
   #create bootstrap detection
-  bootstrap = detection('./data/img_frames/1/png',FAR)
+  bootstrap = detection('./data/img_frames/1'+'.png',FAR)
   #enter loop where tracker is fed detections, detector fed tracks, and threshold evaluated as this changes
   while(1):
         #grab a set amt. of frames from ./data/frames and move it to args.frames_path
