@@ -16,9 +16,9 @@ import build_array
 FAR = 0.05
 
 class tracker_args:
-  detection_path = ''
-  output_path = ''
-  frames_path = ''
+  detection_path = './data/detections'
+  output_path = './data/tracks'
+  frames_path = './data/frames'
   fmt = visdrone
   sigma_l = 0.9
   sigma_h = 0.98
@@ -50,10 +50,10 @@ def track(args):
   tracks = build_array(tracks, fmt=args.format)
   return tracks
 
-def detection(image):
+def detection(image,thresh):
   '''runs a darknet detection.  Returns an array of form [(object, probability, (b.x, b.y, b.w, b.h)), (object2....]
   image should be the path (relative to root) showing the input image zoomed in on a track's bounding boxes'''
-  detections = detect_img(image)
+  detections = detect_img(image,thresh)
   return detections
 
 def ev_thresh(tracks,detections):
@@ -70,5 +70,5 @@ def main():
   args = tracker_args()
   vid_loc = './data/video.mp4'
   #create bootstrap detection
-  bootstrap = detection('./data/img_frames/1/png')
+  bootstrap = detection('./data/img_frames/1/png',FAR)
   #enter loop where tracker is fed detections, detector fed tracks, and threshold evaluated as this changes
