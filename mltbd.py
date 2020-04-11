@@ -7,7 +7,7 @@ import cv2
 sys.path.insert(1, '/darknet/python')
 sys.path.insert(1, '/iou-tracker')
 #import for detector
-import detect_dknet
+from detect_dknet import detect_img
 #imports for tracker
 from iou_tracker import track_iou
 from util import load_mot
