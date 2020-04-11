@@ -1,8 +1,11 @@
 import argparse
 import sys
+import os
+import cv2
 #import libraries from other folders
 sys.path.insert(1, '/darknet/python')
 sys.path.insert(1, '/iou-tracker')
+#import for detector
 import detect_dknet
 #imports for tracker
 from iou_tracker import track_iou
@@ -26,8 +29,8 @@ class tracker_args:
   
 def input_data(data):
   if(data == file):
-    open_file()
-    return file_handle
+    #open video, store all image shots from video into an output directory
+    
   elif(data == stream):
     open_buffer()
     return buffer_handle
@@ -46,12 +49,15 @@ def detection(image):
   detections = detect_img(image)
   return detections
 
-def ev_thresh(tracks,detects):
+def ev_thresh(tracks,detections):
   tr = len(tracks)
   det = len(detects)
   if(tr>det):
     FAR = FAR + .05
   return FAR
+
+def bootstrap():
+  
 
 def gui_feed():
   external_call(frames,detects)
