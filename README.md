@@ -12,6 +12,6 @@ This work is indebted to existing Computer Vision models which we have repurpose
 * **Caleb Carr** - Programmer and Research - [calebmcarr](https://github.com/calebmcarr)
 * **Bibi Dang** - Programmer and Research - [bibidang](https://github.com/bibidang)
 ## Paper
-[Novel Track-before-Detect with Neural Networks.pdf](Novel Track-before-Detect with Neural Networks)
+Novel Track-before-Detect with Neural Networks
 ## License
 This project is licensed under the GNU GPL v3.  Can be viewed at [LICENSE.txt](LICENSE.txt)
