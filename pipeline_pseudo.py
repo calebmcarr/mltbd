@@ -1,7 +1,8 @@
 import argparse
 import sys
-#import detector stuff
+#import libraries from other folders
 sys.path.insert(1, '/darknet/python')
+sys.path.insert(1, '/iou-tracker')
 import detect_dknet
 #imports for tracker
 from iou_tracker import track_iou
