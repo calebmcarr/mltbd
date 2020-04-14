@@ -92,6 +92,7 @@ def main():
         #TODO write bit to zoom in on frames with tracks, change args.frames_path
         #call detection() on last image in args.frames_path 
         detections = detection(args.frames_path+'/'+str(frame_count-1)+'.png')
+        #call detect and then mesh detect coord. over track coord. and compare, avoid detect() interepret time.
         #call ev_thresh() to see if FAR shoud be updated
         ev_thresh()
         
