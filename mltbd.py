@@ -12,6 +12,7 @@ from detect_dknet import detect_img
 #imports for tracker
 from iou_tracker import track_iou
 from util import load_mot
+from util import iou
 import build_array
 
 #global FAR/Threshold 
@@ -45,9 +46,8 @@ def input_data(vid_loc):
   video.release()
 
 
-def track(args):
+def track(args,detections):
   '''runs a detection, object-oriented version of demo.py'''
-  detections = load_mot(args.detection_path, nms_overlap_thresh=args.nms, with_classes=with_classes)
   tracks = track_iou(detections, args.sigma_l, args.sigma_h, args.sigma_iou, args.t_min)
   tracks = build_array(tracks, fmt=args.format)
   return tracks
@@ -57,7 +57,6 @@ def detection(image,thresh,frame_num):
   image should be the path (relative to root) showing the input image zoomed in on a track's bounding boxes'''
   detections = detect_img(image,thresh)
   dt2 = []
-  #TODO Write bit to save detections properly to args.detection_path, stand in now
   for dt in range(len(detections)):
         #take out info in each detection, reformat for tracker
         temp = []
@@ -68,12 +67,12 @@ def detection(image,thresh,frame_num):
   det_path_write()
   return dt2
 
-def ev_thresh(detections):
-  det = len(detections)
-  if(det > 1):
+def ev_thresh(len_ious,len_tracks):
+  if(len_ious < len_tracks):
     FAR = FAR + .05
   else:
     pass
+  return
 
 def gui_feed():
   external_call(frames,detects)
@@ -83,7 +82,7 @@ def main():
   frame_count = 0
   vid_loc = './data/video.mp4'
   #create bootstrap detection
-  bootstrap = detection('./data/img_frames/1'+'.png',FAR,0)
+  detections = detection('./data/img_frames/1'+'.png',FAR,0)
   #enter loop where tracker is fed detections, detector fed tracks, and threshold evaluated as this changes
   while(1):
         #grab a set amt. of frames from ./data/frames and move it to args.frames_path
@@ -97,7 +96,7 @@ def main():
           copyfile(src,args.frames_path)
         frame_count += 100
         #call tracks now
-        tracks = track(args)
+        tracks = track(args,detections)
         #call detection() on last image in args.frames_path 
         detections = detection(args.frames_path+'/'+str(frame_count-1)+'.png',frame_count-1)
         #call detect and then mesh detect coord. over track coord. and compare, avoid detect() interepret time.
@@ -107,12 +106,23 @@ def main():
           temp = []
           temp.extend((detections[dt][2],detections[dt][3],detections[dt][4],detections[dt][5]))
           dt_boxes.append(temp)
+        ious = []
         for track in range(len(tracks)):
           track_cmp = []
           track_cmp.extend((tracks[track][2],tracks[track][3],tracks[track][4],tracks[track][5]))
           for dt in range(len(dt_boxes)):
             #compare current track against all boxes
-            
+            float(tx1),float(ty1),float(tx2),float(ty2) = track_cmp[0],track_cmp[1],track_cmp[0]+track_cmp[2],track_cmp[1]+track_cmp[3]
+            bbox1 = [tx1,ty1,tx2,ty2]
+            bbox1 = np.asarray(bbox1)
+            float(dx1),float(dy1),float(dx2),float(dy2) = dt[0],dt[1],dt[0]+dt[2],dt[1]+dt[3]
+            bbox2 = [dx1,dy1,dx2,dy2]
+            bbox2 = np.asarray(bbox2)
+            intovunion = iou(bbox1,bbox2)
+            if(intovunion > args.sigma_l):
+              ious.append(intovunion)
+            else:
+              pass
         #call ev_thresh() to see if FAR shoud be updated
-        ev_thresh()
+        ev_thresh(len(ious),len(tracks))
         
