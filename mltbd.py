@@ -80,7 +80,7 @@ def gui_feed():
 def main():
   args = tracker_args()
   frame_count = 0
-  vid_loc = './data/video.mp4'
+  vid_loc = './data/video.mov'
   #create bootstrap detection
   detections = detection('./data/img_frames/1'+'.png',FAR,0)
   #enter loop where tracker is fed detections, detector fed tracks, and threshold evaluated as this changes
