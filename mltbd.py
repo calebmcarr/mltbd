@@ -5,15 +5,15 @@ from shutil import copyfile
 import cv2
 import numpy as np
 #import libraries from other folders
-sys.path.insert(1, '/darknet/python')
-sys.path.insert(1, '/iou-tracker')
+sys.path.insert(1, './darknet/python')
+sys.path.insert(1, './iou-tracker')
 #import for detector
 from detect_dknet import detect_img
 #imports for tracker
 from iou_tracker import track_iou
 from util import load_mot
 from util import iou
-import build_array
+from format import build_array
 
 #global FAR/Threshold 
 FAR = 0.05
@@ -22,7 +22,7 @@ class tracker_args:
   detection_path = './data/detections'
   output_path = './data/tracks'
   frames_path = './data/frames'
-  fmt = visdrone
+  fmt = 'motchallenge'
   sigma_l = 0.9
   sigma_h = 0.98
   sigma_iou = 0.1
@@ -35,7 +35,7 @@ def input_data(vid_loc):
   path_output_dir = './data/img_frames'
   video = cv2.VideoCapture(vid_loc)
   count = 0
-  while(vidcap.isOpened():
+  while(video.isOpened()):
         flag, img = video.read()
         if flag:
           cv2.imwrite(os.path.join(path_output_dir, '%d.png') % count, img)
@@ -81,6 +81,7 @@ def main():
   args = tracker_args()
   frame_count = 0
   vid_loc = './data/video.mov'
+  input_data(vid_loc)
   #create bootstrap detection
   detections = detection('./data/img_frames/1'+'.png',FAR,0)
   #enter loop where tracker is fed detections, detector fed tracks, and threshold evaluated as this changes
@@ -112,10 +113,10 @@ def main():
           track_cmp.extend((tracks[track][2],tracks[track][3],tracks[track][4],tracks[track][5]))
           for dt in range(len(dt_boxes)):
             #compare current track against all boxes
-            float(tx1),float(ty1),float(tx2),float(ty2) = track_cmp[0],track_cmp[1],track_cmp[0]+track_cmp[2],track_cmp[1]+track_cmp[3]
+            tx1,ty1,tx2,ty2 = track_cmp[0],track_cmp[1],track_cmp[0]+track_cmp[2],track_cmp[1]+track_cmp[3]
             bbox1 = [tx1,ty1,tx2,ty2]
             bbox1 = np.asarray(bbox1)
-            float(dx1),float(dy1),float(dx2),float(dy2) = dt[0],dt[1],dt[0]+dt[2],dt[1]+dt[3]
+            dx1,dy1,dx2,dy2 = dt[0],dt[1],dt[0]+dt[2],dt[1]+dt[3]
             bbox2 = [dx1,dy1,dx2,dy2]
             bbox2 = np.asarray(bbox2)
             intovunion = iou(bbox1,bbox2)
@@ -126,3 +127,5 @@ def main():
         #call ev_thresh() to see if FAR shoud be updated
         ev_thresh(len(ious),len(tracks))
         
+if __name__ == '__main__':
+	main()

@@ -45,7 +45,7 @@ class METADATA(Structure):
     
 
 #lib = CDLL("/home/pjreddie/documents/darknet/libdarknet.so", RTLD_GLOBAL)
-lib = CDLL("./libdarknet.so", RTLD_GLOBAL)
+lib = CDLL("./darknet/libdarknet.so", RTLD_GLOBAL)
 lib.network_width.argtypes = [c_void_p]
 lib.network_width.restype = c_int
 lib.network_height.argtypes = [c_void_p]
@@ -143,7 +143,7 @@ def detect(net, meta, image, thresh, hier_thresh=.5, nms=.45):
     return res
     
 def detect_img(img_path,thresh):
-    net = load_net("./cfg/yolov3.cfg", "yolov3.weights", 0)
-    meta = load_meta("./cfg/coco.data")
+    net = load_net("./darknet/cfg/yolov3.cfg", "yolov3.weights", 0)
+    meta = load_meta("./darknet/cfg/coco.data")
     r = detect(net, meta, img_path,thresh)
     return r
