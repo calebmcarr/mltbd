@@ -31,8 +31,9 @@ def track_iou(detections, sigma_l, sigma_h, sigma_iou, t_min):
     tracks_finished = []
 
     for frame_num, detections_frame in enumerate(detections, start=1):
+	for det in detections_frame:
         # apply low threshold to detections
-        dets = [det for det in detections_frame if det['score'] >= sigma_l]
+            dets = [det for det in detections_frame if det['score'] >= sigma_l]
 
         updated_tracks = []
         for track in tracks_active:

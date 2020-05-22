@@ -23,13 +23,10 @@ class tracker_args:
   output_path = './data/tracks'
   frames_path = './data/frames'
   fmt = 'motchallenge'
-  #sigma_l = 0.9
-  sigma_l = 0.05
-  #sigma_h = 0.98
-  sigma_h = 0.05
+  sigma_l = 0.9
+  sigma_h = 0.98
   sigma_iou = 0.1
-  #t_min = 23
-  t_min = 1
+  t_min = 23
   ttl = 8
   nms = 0.6
   
@@ -57,10 +54,10 @@ def input_data(vid_loc):
 def tracker(args,detections):
   '''runs a detection, object-oriented version of demo.py'''
   #might need to add nms to load_mot
-  dets = load_mot(detections, with_classes = 0)
+  dets = load_mot(detections)
   print('\t[-] Track with Intersection over Union')
   tracks = track_iou(dets, args.sigma_l, args.sigma_h, args.sigma_iou, args.t_min)
-  print('\t[-] Format Tracks')
+  print('\t[-] Format Tracks') 
   tracks = build_array2(tracks, fmt=args.fmt)
   return tracks
 
@@ -93,7 +90,7 @@ def detection(image,thresh,frame_num):
 def ev_thresh(len_ious,len_tracks):
   global FAR
   if(len_tracks == 0):
-    FAR = FAR - .05
+    FAR = FAR + .05
   elif(len_ious < len_tracks):
     FAR = FAR + .05
   else:
@@ -152,18 +149,16 @@ def main():
         else:
           for track in range(len(tracks)):
             track_cmp = []
-	    #track_cmp.append(tracks[track][2])
-	    print tracks[track]
-            track_cmp.append(tracks[track]['x'])
-  	    track_cmp.append(tracks[track]['y'])
-	    track_cmp.append(tracks[track]['w'])
-	    track_cmp.append(tracks[track]['h'])
+            track_cmp.append(tracks[track][2])
+  	    track_cmp.append(tracks[track][3])
+	    track_cmp.append(tracks[track][4])
+	    track_cmp.append(tracks[track][5]) 
 	  for dt in range(len(dt_boxes)):
             #compare current track against all boxes
             tx1,ty1,tx2,ty2 = track_cmp[0],track_cmp[1],track_cmp[0]+track_cmp[2],track_cmp[1]+track_cmp[3]
             bbox1 = [tx1,ty1,tx2,ty2]
             bbox1 = np.asarray(bbox1)
-            dx1,dy1,dx2,dy2 = float(dt_boxes[dt][0]),float(dt_boxes[dt][1]),float(dt_boxes[dt][0])+float(dt_boxes[dt][2]),float(dt_boxes[dt][1])+float(dt_boxes[dt][3])
+            dx1,dy1,dx2,dy2 = dt[0],dt[1],dt[0]+dt[2],dt[1]+dt[3]
             bbox2 = [dx1,dy1,dx2,dy2]
             bbox2 = np.asarray(bbox2)
             intovunion = iou(bbox1,bbox2)

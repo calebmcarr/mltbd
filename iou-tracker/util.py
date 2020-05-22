@@ -10,7 +10,7 @@ import csv
 import os
 
 
-visdrone_classes = {'car': 4, 'bus': 9, 'truck': 6, 'pedestrian': 1, 'van': 5}
+visdrone_classes = {'car': 4, 'bus': 9, 'truck': 6, 'pedestrian': 1, 'van': 5, 'pottedplant': 6}
 
 
 def load_mot(detections, nms_overlap_thresh=None, with_classes=True, nms_per_class=False):
@@ -32,6 +32,10 @@ def load_mot(detections, nms_overlap_thresh=None, with_classes=True, nms_per_cla
         assert with_classes, "currently only works with classes available"
 
     data = []
+    #insert a float
+    print('util.py detections length ', len(detections))
+    for i in range(len(detections)):
+        detections[i][1] = 1
     if type(detections) is str:
         raw = np.genfromtxt(detections, delimiter=',', dtype=np.float32)
         if np.isnan(raw).all():
@@ -43,7 +47,7 @@ def load_mot(detections, nms_overlap_thresh=None, with_classes=True, nms_per_cla
         raw = detections.astype(np.float32)
 
     end_frame = int(np.max(raw[:, 0]))
-    for i in range(1, end_frame+1):
+    for i in range(0, end_frame+1):
         idx = raw[:, 0] == i
         bbox = raw[idx, 2:6]
         bbox[:, 2:4] += bbox[:, 0:2]  # x1, y1, w, h -> x1, y1, x2, y2
@@ -87,7 +91,6 @@ def load_mot(detections, nms_overlap_thresh=None, with_classes=True, nms_per_cla
         for bb, s, c in zip(bbox, scores, classes):
             dets.append({'bbox': (bb[0], bb[1], bb[2], bb[3]), 'score': s, 'class': c})
         data.append(dets)
-
     return data
 
 

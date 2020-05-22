@@ -126,12 +126,15 @@ def detect(net, meta, image, thresh, hier_thresh=.5, nms=.45):
     im = load_image(image, 0, 0)
     num = c_int(0)
     pnum = pointer(num)
+    print('\t[*] predict on image')
     predict_image(net, im)
+    print('\t[*] determine network boxes')
     dets = get_network_boxes(net, im.w, im.h, thresh, hier_thresh, None, 0, pnum)
     num = pnum[0]
     if (nms): do_nms_obj(dets, num, meta.classes, nms);
 
     res = []
+    print('\t[*] compile results')
     for j in range(num):
         for i in range(meta.classes):
             if dets[j].prob[i] > 0:
@@ -143,7 +146,10 @@ def detect(net, meta, image, thresh, hier_thresh=.5, nms=.45):
     return res
     
 def detect_img(img_path,thresh):
-    net = load_net("./darknet/cfg/yolov3.cfg", "yolov3.weights", 0)
+    print('loading weights')
+    net = load_net("./darknet/cfg/yolov2.cfg", "./darknet/cfg/yolov2.weights", 0)
+    print('\tloading COCO data')
     meta = load_meta("./darknet/cfg/coco.data")
+    print('\t[-] Detecting Image')
     r = detect(net, meta, img_path,thresh)
     return r

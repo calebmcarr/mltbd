@@ -38,23 +38,17 @@ def build_array2(tracks, fmt='motchallenge'):
     """
     Saves to list, not CSV file.
     """
+    field_names = ['frames','id','x','y','w','h','score','wx','wy','wz']
     id_ = 1
     track_array = []
     for track in tracks:
         for i, bbox in enumerate(track['bboxes']):
             row = {'id': id_,
-                   'frame': track['start_frame'] + i,
+                   'frame': track['start_frame']+1,
                    'x': bbox[0]+1,
                    'y': bbox[1]+1,
                    'w': bbox[2] - bbox[0],
                    'h': bbox[3] - bbox[1],
                    'score': track['max_score']}
-            if fmt == 'motchallenge':
-                row['wx'] = -1
-                row['wy'] = -1
-                row['wz'] = -1
-            else:
-                raise ValueError("unkown format type '{}'".format(fmt))
-        track_array.append(row)
-    id_ += 1
-    return track_array
+            if(
+
